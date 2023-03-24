@@ -8,6 +8,7 @@ const config = {
       },
       colors: {
         primary_dark: "#1A1A1A",
+        accent: "#706DFF",
       },
     },
   },

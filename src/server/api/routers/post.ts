@@ -13,4 +13,20 @@ export const postRouter = createTRPCRouter({
         message: "post created",
       };
     }),
+
+  getAllPosts: protectedProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.prisma.post.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 100,
+      include: {
+        author: {
+          select: { id: true, image: true, username: true },
+        },
+      },
+    });
+
+    return posts;
+  }),
 });
