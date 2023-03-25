@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { signOut, useSession } from "next-auth/react";
-import UserDropdown from "../ui/UserDropdown";
+import { useSession } from "next-auth/react";
+import UserDropdown from "../ui/UserProfileDropdown";
 import Image from "next/image";
 
 const Header = () => {
@@ -17,7 +17,7 @@ const Header = () => {
         <Link href="/">Feed</Link>
       </nav>
       <div className="inline-flex">
-        <UserDropdown onSignOut={signOut}>
+        <UserDropdown>
           {!user.image && (
             <div className="h-10 w-10 rounded-full bg-gray-600 sm:h-10 sm:w-12"></div>
           )}

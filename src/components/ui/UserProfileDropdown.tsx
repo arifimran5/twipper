@@ -1,5 +1,6 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import type { ReactNode } from "react";
+import { signOut } from "next-auth/react";
 
 const DropdownMenuRoot = DropdownMenu.Root;
 const DropdownMenuTrigger = DropdownMenu.Trigger;
@@ -9,9 +10,8 @@ const DropdownMenuItem = DropdownMenu.Item;
 
 type UserProfileDropdownType = {
   children: ReactNode;
-  onSignOut: () => void;
 };
-const UserDropdown = ({ children, onSignOut }: UserProfileDropdownType) => {
+const UserDropdown = ({ children }: UserProfileDropdownType) => {
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger className="outline-none">
@@ -31,7 +31,7 @@ const UserDropdown = ({ children, onSignOut }: UserProfileDropdownType) => {
           </DropdownMenuItem>
           <DropdownMenu.Separator className="my-1 mx-2 ml-4 mb-2 border-[1px] border-gray-500" />
           <DropdownMenuItem className=" flex h-[25px] select-none items-center rounded-[3px] px-1 pl-4 font-medium text-red-400 outline-none data-[disabled]:pointer-events-none data-[disabled]:text-gray-500 data-[highlighted]:text-accent">
-            <button onClick={() => onSignOut()} className="">
+            <button onClick={() => void signOut()} className="">
               Sign out
             </button>
           </DropdownMenuItem>
