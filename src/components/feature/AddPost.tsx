@@ -10,7 +10,7 @@ type PostInput = {
 
 const AddPost = () => {
   const queryctx = api.useContext();
-  const { register, handleSubmit, reset } = useForm<PostInput>();
+  const { register, handleSubmit, reset, setFocus } = useForm<PostInput>();
   const { mutate, isLoading: isPosting } = api.post.createPost.useMutation({
     onSuccess: () => {
       reset();
@@ -31,9 +31,10 @@ const AddPost = () => {
   return (
     <div className="mt-8">
       <form
+        onClick={() => setFocus("post")}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(submitPost)}
-        className="mx-auto flex max-w-[36rem] flex-col rounded-lg border-2 border-gray-100 bg-gray-50  p-5"
+        className="mx-auto flex max-w-[36rem] flex-col rounded-lg border-2 border-gray-100 bg-gray-50 p-5"
       >
         <div>
           <textarea
