@@ -19,8 +19,6 @@ const Home: NextPage = () => {
     }
   }, [sessionData, router]);
 
-  console.log(sessionData);
-
   return (
     <Layout>
       <Head>
