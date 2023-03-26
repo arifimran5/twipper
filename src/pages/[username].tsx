@@ -2,6 +2,7 @@ import PostList from "@/components/feature/PostList";
 import Layout from "@/components/layout/layout";
 import { api } from "@/utils/api";
 import type { GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
 
 const UsernamePage = ({ username }: { username: string }) => {
@@ -10,13 +11,20 @@ const UsernamePage = ({ username }: { username: string }) => {
   });
 
   return (
-    <Layout>
-      <main className="mx-auto max-w-[36rem]">
-        <Profile username={username} />
-        <h3 className="mt-8 text-xl font-semibold">My Posts</h3>
-        <PostList posts={posts} isLoading={isLoading} />
-      </main>
-    </Layout>
+    <>
+      <Head>
+        <title>@{username}</title>
+        <meta name="description" content={`Profile of ${username}`} />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Layout>
+        <main className="mx-auto max-w-[36rem]">
+          <Profile username={username} />
+          <h3 className="mt-8 text-xl font-semibold">My Posts</h3>
+          <PostList posts={posts} isLoading={isLoading} />
+        </main>
+      </Layout>
+    </>
   );
 };
 
