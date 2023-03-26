@@ -1,7 +1,8 @@
 import PostList from "@/components/feature/PostList";
 import Layout from "@/components/layout/layout";
 import { api } from "@/utils/api";
-import type { GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -77,19 +78,25 @@ const Profile = ({ username }: { username: string }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
   const slug = context.params?.username;
   if (typeof slug !== "string") throw new Error("no username");
   const username = slug.substring(1);
-  return {
-    props: {
-      username,
-    },
-  };
-};
 
-export const getStaticPaths = () => {
-  return { paths: [], fallback: "blocking" };
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session, username },
+  };
 };
 
 export default UsernamePage;

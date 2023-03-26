@@ -23,8 +23,6 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
@@ -41,3 +39,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: { session },
   };
 };
+
+export default Home;
