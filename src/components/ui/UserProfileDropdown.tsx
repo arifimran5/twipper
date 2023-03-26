@@ -1,6 +1,7 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import type { ReactNode } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 const DropdownMenuRoot = DropdownMenu.Root;
 const DropdownMenuTrigger = DropdownMenu.Trigger;
@@ -12,6 +13,12 @@ type UserProfileDropdownType = {
   children: ReactNode;
 };
 const UserDropdown = ({ children }: UserProfileDropdownType) => {
+  const { data: session } = useSession();
+
+  if (!session?.user) {
+    return null;
+  }
+
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger className="outline-none">
@@ -24,7 +31,9 @@ const UserDropdown = ({ children }: UserProfileDropdownType) => {
           sideOffset={5}
         >
           <DropdownMenuItem className=" flex h-[25px] select-none items-center rounded-[3px] px-1 pl-4 font-medium text-white  outline-none data-[disabled]:pointer-events-none data-[disabled]:text-gray-500 data-[highlighted]:text-accent">
-            <button className="">Profile</button>
+            <Link href={`/@${session?.user.username}`} className="">
+              Profile
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className=" flex h-[25px] select-none items-center rounded-[3px] px-2 pl-4 font-sans font-medium text-white outline-none data-[disabled]:pointer-events-none data-[disabled]:text-gray-500 data-[highlighted]:text-accent">
             <button className="">Account Settings</button>

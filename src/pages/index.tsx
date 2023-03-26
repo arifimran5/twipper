@@ -1,24 +1,15 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
-
-// import { api } from "@/utils/api";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { getSession } from "next-auth/react";
 import AddPost from "@/components/feature/AddPost";
 import PostList from "@/components/feature/PostList";
 import Layout from "@/components/layout/layout";
+import { api } from "@/utils/api";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: posts, isLoading } = api.post.getAllPosts.useQuery();
 
-  const router = useRouter();
-  useEffect(() => {
-    if (window) {
-      if (!sessionData) void router.push("/auth/login");
-    }
-  }, [sessionData, router]);
-
+  posts;
   return (
     <Layout>
       <Head>
@@ -27,7 +18,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AddPost />
-      <PostList />
+      <PostList posts={posts} isLoading={isLoading} />
     </Layout>
   );
 };
