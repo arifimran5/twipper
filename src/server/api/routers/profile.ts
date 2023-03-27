@@ -31,6 +31,7 @@ export const profileRouter = createTRPCRouter({
           createdAt: "desc",
         },
         include: {
+          likes: true,
           author: {
             select: { id: true, image: true, username: true },
           },

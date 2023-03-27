@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const postRouter = createTRPCRouter({
   createPost: protectedProcedure
@@ -21,6 +22,7 @@ export const postRouter = createTRPCRouter({
       },
       take: 100,
       include: {
+        likes: true,
         author: {
           select: { id: true, image: true, username: true },
         },
@@ -29,4 +31,35 @@ export const postRouter = createTRPCRouter({
 
     return posts;
   }),
+
+  likePost: protectedProcedure
+    .input(z.object({ userId: z.string().cuid(), postId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.postLike.create({
+        data: {
+          postId: input.postId,
+          userId: input.userId,
+        },
+      });
+    }),
+  removeLike: protectedProcedure
+    .input(z.object({ userId: z.string().cuid(), postId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const postLiked = await ctx.prisma.postLike.findFirst({
+        where: {
+          userId: input.userId,
+          postId: input.postId,
+        },
+      });
+
+      if (!postLiked) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "like not found" });
+      }
+
+      return await ctx.prisma.postLike.delete({
+        where: {
+          id: postLiked.id,
+        },
+      });
+    }),
 });

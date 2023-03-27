@@ -21,7 +21,6 @@ const UsernamePage = ({ username }: { username: string }) => {
       <Layout>
         <main className="mx-auto max-w-[36rem]">
           <Profile username={username} />
-          <h3 className="mt-8 text-xl font-semibold">My Posts</h3>
           <PostList posts={posts} isLoading={isLoading} />
         </main>
       </Layout>
