@@ -4,7 +4,7 @@ const config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Poppins", "Arial", "sans-serif"],
+        sans: ["Inter", "Arial", "sans-serif"],
       },
       colors: {
         primary_dark: "#1A1A1A",

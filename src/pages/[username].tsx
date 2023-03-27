@@ -1,15 +1,30 @@
 import PostList from "@/components/feature/PostList";
 import Layout from "@/components/layout/layout";
+import { LikedPostList } from "@/components/profile/FilterPost";
 import { api } from "@/utils/api";
 import type { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
+import { useState } from "react";
 
 const UsernamePage = ({ username }: { username: string }) => {
-  const { data: posts, isLoading } = api.profile.getPostsByUser.useQuery({
-    username,
-  });
+  const { data: posts, isLoading } = api.profile.getPostsByUser.useQuery(
+    {
+      username,
+    },
+    { refetchOnMount: true }
+  );
+
+  const [postListFilter, setPostListFilter] = useState("my");
+
+  const { data: session } = useSession();
+  if (!session) return null;
+
+  const isCurrentUser = session.user.username === username;
+  const showMyPostList = postListFilter === "my";
+  const showLikedPostList = postListFilter === "liked";
+  // const showSavedPostList = postListFilter === "saved";
 
   return (
     <>
@@ -21,7 +36,33 @@ const UsernamePage = ({ username }: { username: string }) => {
       <Layout>
         <main className="mx-auto max-w-[36rem]">
           <Profile username={username} />
-          <PostList posts={posts} isLoading={isLoading} />
+          {isCurrentUser ? (
+            <div className="space-x-6">
+              <button
+                onClick={() => setPostListFilter("my")}
+                className={`mt-5 font-medium text-gray-500 ${
+                  showMyPostList ? "border-b-2 border-accent" : ""
+                }`}
+              >
+                Posts
+              </button>
+              <button
+                onClick={() => setPostListFilter("liked")}
+                className={`mt-5 font-medium text-gray-500 ${
+                  showLikedPostList ? "border-b-2 border-accent" : ""
+                }`}
+              >
+                Likes
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+
+          {showMyPostList ? (
+            <PostList posts={posts} isLoading={isLoading} />
+          ) : null}
+          {showLikedPostList ? <LikedPostList username={username} /> : null}
         </main>
       </Layout>
     </>

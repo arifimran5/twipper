@@ -1,7 +1,15 @@
+import { api } from "@/utils/api";
+import { Heart, Save } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import type { User } from "next-auth";
+import type { Post, PostLike } from "@prisma/client";
 import { LoadingBlock } from "../general/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import type { Post, PostLike } from "@prisma/client";
 
 type PostWithAuthor = Post & {
   likes: PostLike[];
@@ -12,13 +20,27 @@ type PostWithAuthor = Post & {
   };
 };
 
+type PostWithLikes = PostLike & {
+  post: PostWithAuthor;
+};
+
 dayjs.extend(relativeTime);
+export const LikedPostList = ({ username }: { username: string }) => {
+  const { data: posts, isLoading } = api.profile.getLikedPostByUser.useQuery({
+    username,
+  });
+  return (
+    <>
+      <PostList posts={posts} isLoading={isLoading} />
+    </>
+  );
+};
 
 const PostList = ({
   posts,
   isLoading,
 }: {
-  posts: PostWithAuthor[] | undefined;
+  posts: PostWithLikes[] | undefined;
   isLoading: boolean;
 }) => {
   const { data: session } = useSession();
@@ -33,25 +55,14 @@ const PostList = ({
     <>
       <main className="mx-auto mt-4 flex max-w-[36rem] flex-col gap-4">
         {posts.map((post) => (
-          <div key={post.id}>
-            <PostCard post={post} user={session?.user} />
+          <div key={post.post.id}>
+            <PostCard post={post.post} user={session?.user} />
           </div>
         ))}
       </main>
     </>
   );
 };
-
-export default PostList;
-
-import { Heart, Save } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { api } from "@/utils/api";
-import { toast } from "react-hot-toast";
-import type { User } from "next-auth";
 
 type PostCardProps = {
   post: PostWithAuthor;
@@ -63,11 +74,17 @@ const PostCard = ({ post, user }: PostCardProps) => {
     post.likes.find((e) => e.userId === user.id) ? true : false
   );
 
+  const queryContext = api.useContext();
+
   const { mutate: likePost } = api.post.likePost.useMutation({
     onError: () => toast.error("Failed to like"),
   });
 
-  const { mutate: removeLike } = api.post.removeLike.useMutation();
+  const { mutate: removeLike } = api.post.removeLike.useMutation({
+    onSuccess: () => {
+      void queryContext.profile.getLikedPostByUser.invalidate();
+    },
+  });
 
   if (!post.author.image) return <div></div>;
 

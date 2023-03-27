@@ -40,4 +40,28 @@ export const profileRouter = createTRPCRouter({
 
       return posts;
     }),
+  getLikedPostByUser: protectedProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.postLike.findMany({
+        where: {
+          user: {
+            username: input.username,
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          post: {
+            include: {
+              likes: true,
+              author: {
+                select: { id: true, image: true, username: true },
+              },
+            },
+          },
+        },
+      });
+    }),
 });
