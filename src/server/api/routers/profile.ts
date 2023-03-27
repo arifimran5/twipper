@@ -32,6 +32,7 @@ export const profileRouter = createTRPCRouter({
         },
         include: {
           likes: true,
+          PostSave: true,
           author: {
             select: { id: true, image: true, username: true },
           },
@@ -56,6 +57,32 @@ export const profileRouter = createTRPCRouter({
           post: {
             include: {
               likes: true,
+              PostSave: true,
+              author: {
+                select: { id: true, image: true, username: true },
+              },
+            },
+          },
+        },
+      });
+    }),
+  getSavedPostByUser: protectedProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.postSave.findMany({
+        where: {
+          user: {
+            username: input.username,
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          post: {
+            include: {
+              likes: true,
+              PostSave: true,
               author: {
                 select: { id: true, image: true, username: true },
               },

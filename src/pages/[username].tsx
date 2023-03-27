@@ -1,6 +1,6 @@
 import PostList from "@/components/feature/PostList";
 import Layout from "@/components/layout/layout";
-import { LikedPostList } from "@/components/profile/FilterPost";
+import { LikedPostList, SavedPostList } from "@/components/profile/FilterPost";
 import { api } from "@/utils/api";
 import type { GetServerSideProps } from "next";
 import { getSession, useSession } from "next-auth/react";
@@ -24,7 +24,7 @@ const UsernamePage = ({ username }: { username: string }) => {
   const isCurrentUser = session.user.username === username;
   const showMyPostList = postListFilter === "my";
   const showLikedPostList = postListFilter === "liked";
-  // const showSavedPostList = postListFilter === "saved";
+  const showSavedPostList = postListFilter === "saved";
 
   return (
     <>
@@ -54,6 +54,14 @@ const UsernamePage = ({ username }: { username: string }) => {
               >
                 Likes
               </button>
+              <button
+                onClick={() => setPostListFilter("saved")}
+                className={`mt-5 font-medium text-gray-500 ${
+                  showSavedPostList ? "border-b-2 border-accent" : ""
+                }`}
+              >
+                Saved
+              </button>
             </div>
           ) : (
             ""
@@ -63,6 +71,7 @@ const UsernamePage = ({ username }: { username: string }) => {
             <PostList posts={posts} isLoading={isLoading} />
           ) : null}
           {showLikedPostList ? <LikedPostList username={username} /> : null}
+          {showSavedPostList ? <SavedPostList username={username} /> : null}
         </main>
       </Layout>
     </>

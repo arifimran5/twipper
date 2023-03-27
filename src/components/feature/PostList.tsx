@@ -1,10 +1,11 @@
 import { LoadingBlock } from "../general/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import type { Post, PostLike } from "@prisma/client";
+import type { Post, PostLike, PostSave } from "@prisma/client";
 
 type PostWithAuthor = Post & {
   likes: PostLike[];
+  PostSave: PostSave[];
   author: {
     id: string;
     image: string | null;
@@ -57,17 +58,32 @@ type PostCardProps = {
   post: PostWithAuthor;
   user: User;
 };
-const PostCard = ({ post, user }: PostCardProps) => {
+export const PostCard = ({ post, user }: PostCardProps) => {
+  // likes and saves count
   const [likes, setLikes] = useState(post.likes.length);
+  const [saves, setSaves] = useState(post.PostSave.length);
+
+  //liked by user
   const [likedByCurrentUser, setLikedByCurrentUser] = useState(() =>
     post.likes.find((e) => e.userId === user.id) ? true : false
   );
 
+  //saved by user
+  const [savedByCurrentUser, setSavedByCurrentUser] = useState(() =>
+    post.PostSave.find((e) => e.userId === user.id) ? true : false
+  );
+
+  // liking
   const { mutate: likePost } = api.post.likePost.useMutation({
     onError: () => toast.error("Failed to like"),
   });
-
   const { mutate: removeLike } = api.post.removeLike.useMutation();
+
+  // saving
+  const { mutate: savePost } = api.post.savePost.useMutation({
+    onError: () => toast.error("Failed to save"),
+  });
+  const { mutate: removeSave } = api.post.removeSave.useMutation();
 
   if (!post.author.image) return <div></div>;
 
@@ -80,6 +96,18 @@ const PostCard = ({ post, user }: PostCardProps) => {
       removeLike({ postId: post.id, userId: user.id });
       setLikes((prev) => prev - 1);
       setLikedByCurrentUser(false);
+    }
+  };
+
+  const handleSave = () => {
+    if (!savedByCurrentUser) {
+      savePost({ postId: post.id, userId: user.id });
+      setSaves((prev) => prev + 1);
+      setSavedByCurrentUser(true);
+    } else {
+      removeSave({ postId: post.id, userId: user.id });
+      setSaves((prev) => prev - 1);
+      setSavedByCurrentUser(false);
     }
   };
 
@@ -125,7 +153,11 @@ const PostCard = ({ post, user }: PostCardProps) => {
             <span>{likes}</span>
           </button>
           <button className="inline-flex gap-1">
-            <Save className="w-5" /> <span>{0}</span>
+            <Save
+              onClick={handleSave}
+              className={`w-5 ${savedByCurrentUser ? "text-accent" : ""}`}
+            />{" "}
+            <span>{saves}</span>
           </button>
         </div>
       </div>

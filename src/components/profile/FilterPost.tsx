@@ -6,13 +6,15 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import type { User } from "next-auth";
-import type { Post, PostLike } from "@prisma/client";
+import type { Post, PostLike, PostSave } from "@prisma/client";
 import { LoadingBlock } from "../general/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+// import { PostWithAuthor } from "../feature/PostList";
 
 type PostWithAuthor = Post & {
   likes: PostLike[];
+  PostSave: PostSave[];
   author: {
     id: string;
     image: string | null;
@@ -25,8 +27,20 @@ type PostWithLikes = PostLike & {
 };
 
 dayjs.extend(relativeTime);
+
 export const LikedPostList = ({ username }: { username: string }) => {
   const { data: posts, isLoading } = api.profile.getLikedPostByUser.useQuery({
+    username,
+  });
+  return (
+    <>
+      <PostList posts={posts} isLoading={isLoading} />
+    </>
+  );
+};
+
+export const SavedPostList = ({ username }: { username: string }) => {
+  const { data: posts, isLoading } = api.profile.getSavedPostByUser.useQuery({
     username,
   });
   return (
@@ -68,22 +82,37 @@ type PostCardProps = {
   post: PostWithAuthor;
   user: User;
 };
-const PostCard = ({ post, user }: PostCardProps) => {
+export const PostCard = ({ post, user }: PostCardProps) => {
+  // likes and saves count
   const [likes, setLikes] = useState(post.likes.length);
+  const [saves, setSaves] = useState(post.PostSave.length);
+
+  //liked by user
   const [likedByCurrentUser, setLikedByCurrentUser] = useState(() =>
     post.likes.find((e) => e.userId === user.id) ? true : false
   );
 
-  const queryContext = api.useContext();
+  //saved by user
+  const [savedByCurrentUser, setSavedByCurrentUser] = useState(() =>
+    post.PostSave.find((e) => e.userId === user.id) ? true : false
+  );
 
+  const queryCtx = api.useContext();
+
+  // liking
   const { mutate: likePost } = api.post.likePost.useMutation({
     onError: () => toast.error("Failed to like"),
   });
-
   const { mutate: removeLike } = api.post.removeLike.useMutation({
-    onSuccess: () => {
-      void queryContext.profile.getLikedPostByUser.invalidate();
-    },
+    onSuccess: () => void queryCtx.profile.getLikedPostByUser.invalidate(),
+  });
+
+  // saving
+  const { mutate: savePost } = api.post.savePost.useMutation({
+    onError: () => toast.error("Failed to save"),
+  });
+  const { mutate: removeSave } = api.post.removeSave.useMutation({
+    onSuccess: () => void queryCtx.profile.getSavedPostByUser.invalidate(),
   });
 
   if (!post.author.image) return <div></div>;
@@ -97,6 +126,18 @@ const PostCard = ({ post, user }: PostCardProps) => {
       removeLike({ postId: post.id, userId: user.id });
       setLikes((prev) => prev - 1);
       setLikedByCurrentUser(false);
+    }
+  };
+
+  const handleSave = () => {
+    if (!savedByCurrentUser) {
+      savePost({ postId: post.id, userId: user.id });
+      setSaves((prev) => prev + 1);
+      setSavedByCurrentUser(true);
+    } else {
+      removeSave({ postId: post.id, userId: user.id });
+      setSaves((prev) => prev - 1);
+      setSavedByCurrentUser(false);
     }
   };
 
@@ -142,7 +183,11 @@ const PostCard = ({ post, user }: PostCardProps) => {
             <span>{likes}</span>
           </button>
           <button className="inline-flex gap-1">
-            <Save className="w-5" /> <span>{0}</span>
+            <Save
+              onClick={handleSave}
+              className={`w-5 ${savedByCurrentUser ? "text-accent" : ""}`}
+            />{" "}
+            <span>{saves}</span>
           </button>
         </div>
       </div>
