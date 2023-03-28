@@ -36,9 +36,9 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   username      String
@@ -47,6 +47,7 @@ model User {
   posts         Post[]
   likes         PostLike[]
   PostSave      PostSave[]
+  profile       UserProfile?
 }
 
 model VerificationToken {
@@ -78,28 +79,7 @@ model PostLike {
   createdAt DateTime @default(now())
 }
 
-// Save a new like for a post by a user
-// async function likePost(userId, postId) {
-//   const postLike = await prisma.postLike.create({
-//     data: {
-//       user: { connect: { id: userId } },
-//       post: { connect: { id: postId } },
-//     },
-//   });
-//   return postLike;
-// }
-
-// to get likes count of any post
-// const post = await prisma.post.findUnique({
-//     where: { id: postId },
-//     include: {
-//       likes: true,
-//     },
-//     });
-//   post.likesCount = post.likes.length;
-
 // Post Save
-
 model PostSave {
   id        String   @id @default(cuid())
   user      User     @relation(fields: [userId], references: [id])
@@ -109,13 +89,14 @@ model PostSave {
   createdAt DateTime @default(now())
 }
 
-// Save a post for a user
-// async function savePost(userId, postId) {
-//   const postSave = await prisma.postSave.create({
-//     data: {
-//       user: { connect: { id: userId } },
-//       post: { connect: { id: postId } },
-//     },
-//   });
-//   return postSave;
-// }
+// Profile Model
+
+model UserProfile {
+  id      String  @id @default(cuid())
+  userId  String  @unique
+  name    String?
+  bio     String?
+  website String?
+
+  User User @relation(fields: [userId], references: [id])
+}

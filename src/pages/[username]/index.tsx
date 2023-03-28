@@ -1,6 +1,7 @@
 import PostList from "@/components/feature/PostList";
 import Layout from "@/components/layout/layout";
 import { LikedPostList, SavedPostList } from "@/components/profile/FilterPost";
+import { generateSSG } from "@/server/helpers/generateSSGtrpc";
 import { api } from "@/utils/api";
 import type { GetServerSideProps } from "next";
 import { getSession, useSession } from "next-auth/react";
@@ -130,9 +131,13 @@ const Profile = ({ username }: { username: string }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
+  const ssg = generateSSG(session);
+
   const slug = context.params?.username;
   if (typeof slug !== "string") throw new Error("no username");
   const username = slug.substring(1);
+
+  await ssg.profile.getProfileByUsername.prefetch({ username });
 
   if (!session) {
     return {
@@ -144,7 +149,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: { session, username },
+    props: { session, trpcState: ssg.dehydrate(), username },
   };
 };
 
