@@ -106,6 +106,10 @@ const Profile = ({ username }: { username: string }) => {
       </div>
     );
   }
+
+  const websiteArr = user.website?.split("//");
+  console.log(websiteArr);
+
   return (
     <section className="mt-8 rounded-2xl bg-primary_dark p-5">
       <div className="w-max rounded-full bg-accent p-[2px]">
@@ -117,13 +121,23 @@ const Profile = ({ username }: { username: string }) => {
           alt={`${user.name ?? user.username} image`}
         />
       </div>
+
       <h1 className="mt-2 text-2xl font-semibold text-white">
         {user.name ?? user.username}
       </h1>
-      {user.name && (
-        <h2 className="mt-1 font-medium text-gray-400">@{user.username}</h2>
-      )}
-      <p className="mt-1 text-gray-200">bio goes here..</p>
+
+      <div className=" mt-1 flex items-center gap-8">
+        <h2 className="font-medium text-gray-400">@{user.username}</h2>
+        {user.website ? (
+          <a href={user.website}>
+            <span className="text-gray-400">
+              {!websiteArr && user.website}
+              {websiteArr && websiteArr[1]}
+            </span>
+          </a>
+        ) : null}
+      </div>
+      {user.bio ? <p className="mt-1 text-gray-200">{user.bio}</p> : null}
     </section>
   );
 };
