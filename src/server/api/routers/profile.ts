@@ -91,4 +91,9 @@ export const profileRouter = createTRPCRouter({
         },
       });
     }),
+  // user settings ->
+
+  updateUserProfile: protectedProcedure.input(z.object({})).mutation(() => {
+    return "update user";
+  }),
 });

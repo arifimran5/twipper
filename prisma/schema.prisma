@@ -98,5 +98,5 @@ model UserProfile {
   bio     String?
   website String?
 
-  User User @relation(fields: [userId], references: [id])
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
