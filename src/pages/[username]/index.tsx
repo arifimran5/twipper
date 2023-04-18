@@ -32,7 +32,18 @@ const UsernamePage = ({ username }: { username: string }) => {
       <Head>
         <title>@{username}</title>
         <meta name="description" content={`Profile of ${username}`} />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="shortcut icon"
+          sizes="16x16"
+          type="image/svg"
+          href="/16x16.svg"
+        />
+        <link
+          rel="shortcut icon"
+          sizes="32x32"
+          type="image/svg"
+          href="/32x32.svg"
+        />
       </Head>
       <Layout>
         <main className="mx-auto max-w-[36rem]">

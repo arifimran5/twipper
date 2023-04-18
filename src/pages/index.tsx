@@ -15,7 +15,18 @@ const Home: NextPage = () => {
       <Head>
         <title>Twipper</title>
         <meta name="description" content="A twitter clone" />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="shortcut icon"
+          sizes="16x16"
+          type="image/svg"
+          href="/16x16.svg"
+        />
+        <link
+          rel="shortcut icon"
+          sizes="32x32"
+          type="image/svg"
+          href="/32x32.svg"
+        />
       </Head>
       <AddPost />
       <PostList posts={posts} isLoading={isLoading} />

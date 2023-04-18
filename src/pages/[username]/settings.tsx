@@ -12,7 +12,18 @@ export default function UserSettingPage({ username }: { username: string }) {
       <Head>
         <title>Settings - @{username}</title>
         <meta name="description" content={`Settings page of ${username}`} />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="shortcut icon"
+          sizes="16x16"
+          type="image/svg"
+          href="/16x16.svg"
+        />
+        <link
+          rel="shortcut icon"
+          sizes="32x32"
+          type="image/svg"
+          href="/32x32.svg"
+        />
       </Head>
       <h1 className="mt-5 text-xl font-medium text-gray-400">
         Profile Settings
