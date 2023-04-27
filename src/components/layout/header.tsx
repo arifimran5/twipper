@@ -1,38 +1,60 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import UserDropdown from "../ui/UserProfileDropdown";
 import Image from "next/image";
+import { cn } from "@/utils/cn";
 
 const Header = () => {
   const { data: session } = useSession();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleSetScrollY = () => {
+      setScrollY(window.scrollY);
+    };
+
+    if (typeof window != undefined) {
+      window.addEventListener("scroll", handleSetScrollY);
+    }
+    return () => window.removeEventListener("scroll", handleSetScrollY);
+  }, [scrollY]);
 
   if (!session?.user) return <div></div>;
 
   const user = session.user;
 
+  const isAtTop = scrollY == 0;
+
   return (
-    <header className="mt-4 flex items-center justify-between rounded-full bg-primary_dark px-8 py-4 text-white">
-      <nav>
-        <Link href="/">Feed</Link>
-      </nav>
-      <div className="inline-flex">
-        <UserDropdown>
-          {!user.image && (
-            <div className="h-10 w-10 rounded-full bg-gray-600 sm:h-10 sm:w-12"></div>
-          )}
-          {user.image && (
-            <Image
-              width={40}
-              height={40}
-              className="rounded-full"
-              src={user.image}
-              alt="userprofile"
-            />
-          )}
-        </UserDropdown>
-      </div>
-    </header>
+    <>
+      <header
+        className={cn(
+          "navbar sticky top-2 mt-4 flex items-center justify-between rounded-full bg-primary_dark px-8 py-4 text-white transition-opacity duration-150 ease-out",
+          isAtTop ? "" : "bg-primary_dark/80 backdrop-blur-sm"
+        )}
+      >
+        <nav>
+          <Link href="/">Feed</Link>
+        </nav>
+        <div className="inline-flex">
+          <UserDropdown>
+            {!user.image && (
+              <div className="h-10 w-10 rounded-full bg-gray-600 sm:h-10 sm:w-12"></div>
+            )}
+            {user.image && (
+              <Image
+                width={40}
+                height={40}
+                className="rounded-full"
+                src={user.image}
+                alt="userprofile"
+              />
+            )}
+          </UserDropdown>
+        </div>
+      </header>
+    </>
   );
 };
 
