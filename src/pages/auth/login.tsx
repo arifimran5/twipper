@@ -8,13 +8,13 @@ import { Github } from "lucide-react";
 const LoginPage = () => {
   const { data: sessionData } = useSession();
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  useEffect(() => {
-    if (window) {
-      if (sessionData?.user) void router.push("/");
-    }
-  }, [sessionData, router]);
+  // useEffect(() => {
+  //   if (window) {
+  //     if (sessionData?.user) void router.push("/");
+  //   }
+  // }, [sessionData, router]);
 
   // const handleSignIn = async () => {
   //   const result = await signIn("github", {
@@ -31,28 +31,37 @@ const LoginPage = () => {
       <Head>
         <title>Login - Twipper</title>
         <meta name="description" content="Login page of twipper" />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="shortcut icon"
+          sizes="16x16"
+          type="image/svg"
+          href="/16x16.svg"
+        />
+        <link
+          rel="shortcut icon"
+          sizes="32x32"
+          type="image/svg"
+          href="/32x32.svg"
+        />
       </Head>
-      <main className="flex min-h-screen justify-between">
-        <div className="hidden w-[40%] shrink-0 bg-accent bg-gradient-to-br from-red-100 to-accent sm:block"></div>
-        <section className="flex w-full bg-slate-900 px-4">
-          <div className="self-center rounded-md bg-white p-6 sm:-ml-24 sm:w-[30rem]">
-            <h1 className="text-3xl font-bold">Welcome 🧁</h1>
-            <p>Get started with your journey with Twipper</p>
-            <button
-              className="mt-4 flex items-center gap-2 rounded-full bg-primary_dark px-6 py-3 font-medium text-white no-underline"
-              onClick={
-                sessionData ? () => void signOut() : () => void signIn("github")
-              }
-            >
-              <span>
-                <Github className="w-5" />
-              </span>{" "}
-              {sessionData ? "Sign out" : "Sign in"}
-            </button>
-          </div>
-        </section>
-      </main>
+
+      <section className="flex min-h-screen items-center justify-center bg-slate-900 px-4">
+        <div className="rounded-md bg-white p-6 sm:w-[30rem]">
+          <h1 className="text-3xl font-bold">Welcome 🧁</h1>
+          <p>Start your journey of `disney clone of twitter` 👉 Twipper</p>
+          <button
+            className="mt-4 flex items-center gap-2 rounded-full border-2 border-slate-500 bg-gradient-to-br from-slate-700 to-slate-800 px-6 py-3 font-medium text-white no-underline"
+            onClick={
+              sessionData ? () => void signOut() : () => void signIn("github")
+            }
+          >
+            <span>
+              <Github className="w-5" />
+            </span>{" "}
+            {sessionData ? "Sign out" : "Sign in with Github"}
+          </button>
+        </div>
+      </section>
     </>
   );
 };
