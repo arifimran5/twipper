@@ -35,3 +35,27 @@ export const LoadingBlock = (props: { size?: "sm" | "md" | "lg" }) => {
     </div>
   );
 };
+
+export const PostLoadingSkeleton = () => {
+  return (
+    <div className="mx-auto mt-4 flex max-w-[36rem] flex-col gap-4">
+      {["", "", "", "", "", ""].map((e, idx) => (
+        <div
+          key={idx}
+          className="is-loading flex h-32 w-full gap-2 rounded-md border-2 border-gray-200/25 bg-gray-100 p-5"
+        >
+          <div className="">
+            {/* image */}
+            <div className="image h-10 w-10 rounded-full bg-gray-200"></div>
+          </div>
+          <div className="flex w-full flex-col gap-3">
+            {/* username */}
+            <span className="username h-6 w-[30%] rounded-md bg-gray-200"></span>
+            {/* content */}
+            <span className="content h-24 rounded-md bg-gray-200 pr-4"></span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};

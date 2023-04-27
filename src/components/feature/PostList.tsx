@@ -1,4 +1,4 @@
-import { LoadingBlock } from "../general/Loading";
+import { PostLoadingSkeleton } from "../general/Loading";
 import type { Post, PostLike, PostSave } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { PostCard } from "./PostCard";
@@ -24,7 +24,7 @@ const PostList = ({
 
   if (!session || !session.user) return null;
   if (isLoading) {
-    return <LoadingBlock />;
+    return <PostLoadingSkeleton />;
   }
   if (!posts) return <div></div>;
 

@@ -1,7 +1,7 @@
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import type { PostLike } from "@prisma/client";
-import { LoadingBlock } from "../general/Loading";
+import { PostLoadingSkeleton } from "../general/Loading";
 import { PostCard } from "../feature/PostCard";
 import type { PostWithAuthor } from "../feature/PostList";
 
@@ -42,7 +42,7 @@ const PostList = ({
 
   if (!session || !session.user) return null;
   if (isLoading) {
-    return <LoadingBlock />;
+    return <PostLoadingSkeleton />;
   }
   if (!posts) return <div></div>;
 
