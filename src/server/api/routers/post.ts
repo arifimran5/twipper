@@ -33,6 +33,49 @@ export const postRouter = createTRPCRouter({
     return posts;
   }),
 
+  getOnePost: protectedProcedure
+    .input(z.object({ postId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: {
+          id: input.postId,
+        },
+        include: {
+          likes: true,
+          PostSave: true,
+          author: {
+            select: {
+              id: true,
+              image: true,
+              username: true,
+            },
+          },
+        },
+      });
+
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      return post;
+    }),
+
+  deletePost: protectedProcedure
+    .input(z.object({ postId: z.string().cuid(), userId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: { id: input.postId, author: { id: input.userId } },
+      });
+
+      if (!post) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User is not authorized to delete this post",
+        });
+      }
+      await ctx.prisma.post.delete({ where: { id: input.postId } });
+    }),
+
   likePost: protectedProcedure
     .input(z.object({ userId: z.string().cuid(), postId: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {

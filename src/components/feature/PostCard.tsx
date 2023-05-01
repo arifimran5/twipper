@@ -8,6 +8,9 @@ import type { User } from "next-auth";
 import type { PostWithAuthor } from "./PostList";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import PostSettingsMenu from "../ui/PostSettingsMenu";
+import { MoreHorizontal } from "lucide-react";
+// import { useRouter } from "next/router";
 
 type PostCardProps = {
   post: PostWithAuthor;
@@ -17,6 +20,8 @@ type PostCardProps = {
 dayjs.extend(relativeTime);
 
 export const PostCard = ({ post, user }: PostCardProps) => {
+  // const router = useRouter();
+
   // likes and saves count
   const [likes, setLikes] = useState(post.likes.length);
   const [saves, setSaves] = useState(post.PostSave.length);
@@ -69,6 +74,8 @@ export const PostCard = ({ post, user }: PostCardProps) => {
     }
   };
 
+  const isPostByCurrentUser = user.id === post.author.id;
+
   return (
     <div className="flex gap-2 rounded-lg border-2 border-gray-100 bg-gray-50 p-3 sm:gap-4">
       <div className="shrink-0">
@@ -85,7 +92,8 @@ export const PostCard = ({ post, user }: PostCardProps) => {
           </Link>
         )}
       </div>
-      <div className="mt-1 sm:mt-2">
+
+      <div className="relative mt-1 w-full sm:mt-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
           <Link
             prefetch={false}
@@ -94,9 +102,19 @@ export const PostCard = ({ post, user }: PostCardProps) => {
           >
             {post.author.username}
           </Link>
-          <span className="text-sm text-gray-400">
-            {dayjs(post.createdAt).fromNow()}
+
+          <span className="w-full text-sm text-gray-400">
+            <Link className="flex" href={`/post/${post.id}`} prefetch={false}>
+              {dayjs(post.createdAt).fromNow()}
+            </Link>
           </span>
+          {isPostByCurrentUser && (
+            <span className="absolute right-0">
+              <PostSettingsMenu postId={post.id}>
+                <MoreHorizontal />
+              </PostSettingsMenu>
+            </span>
+          )}
         </div>
         <p className="mt-2">{post.content}</p>
 
