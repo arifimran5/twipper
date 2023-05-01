@@ -119,7 +119,6 @@ const Profile = ({ username }: { username: string }) => {
   }
 
   const websiteArr = user.website?.split("//");
-  console.log(websiteArr);
 
   return (
     <section className="mt-8 rounded-2xl bg-primary_dark p-5">
