@@ -25,7 +25,6 @@ const AddPost = () => {
   const submitPost: SubmitHandler<PostInput> = (data) => {
     if (data.post.length == 0) return;
     mutate({ content: data.post });
-    console.log(data);
   };
 
   return (
