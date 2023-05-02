@@ -76,6 +76,17 @@ export const postRouter = createTRPCRouter({
       await ctx.prisma.post.delete({ where: { id: input.postId } });
     }),
 
+  editPost: protectedProcedure
+    .input(z.object({ content: z.string(), postId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.post.update({
+        where: { id: input.postId },
+        data: {
+          content: input.content,
+        },
+      });
+    }),
+
   likePost: protectedProcedure
     .input(z.object({ userId: z.string().cuid(), postId: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {

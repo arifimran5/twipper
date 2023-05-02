@@ -7,10 +7,23 @@ import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { generateSSG } from "@/server/helpers/generateSSGtrpc";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import EditPost from "@/components/feature/EditPost";
 
 export default function PostPage({ id }: { id: string }) {
   const { data: session } = useSession();
+
   const router = useRouter();
+  const { edit } = router.query;
+  const [isEditing, setIsEditing] = useState(edit === "true");
+
+  useEffect(() => {
+    setIsEditing(false);
+    if (edit === "true") {
+      setIsEditing(true);
+    }
+  }, [edit]);
+
   const {
     data: post,
     isLoading,
@@ -51,12 +64,15 @@ export default function PostPage({ id }: { id: string }) {
         />
       </Head>
       <Layout>
-        <main className="mx-auto mt-5 max-w-[36rem] space-y-5">
-          <PostCard post={post} user={session.user} />
-          <section>
-            <h2 className="text-lg">Comments</h2>
-          </section>
-        </main>
+        {isEditing && <EditPost post={post} />}
+        {!isEditing && (
+          <main className="mx-auto mt-5 max-w-[36rem] space-y-5">
+            <PostCard post={post} user={session.user} />
+            <section>
+              <h2 className="text-lg">Comments</h2>
+            </section>
+          </main>
+        )}
       </Layout>
     </>
   );
@@ -71,8 +87,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (typeof id !== "string") throw new Error("no username");
 
   await ssg.post.getOnePost.prefetch({ postId: id });
-
-  console.log(session?.user);
 
   if (!session) {
     return {

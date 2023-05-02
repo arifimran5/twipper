@@ -10,9 +10,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import PostSettingsMenu from "../ui/PostSettingsMenu";
 import { MoreHorizontal } from "lucide-react";
-// import { useRouter } from "next/router";
 
-type PostCardProps = {
+export type PostCardProps = {
   post: PostWithAuthor;
   user: User;
 };
@@ -103,7 +102,7 @@ export const PostCard = ({ post, user }: PostCardProps) => {
             {post.author.username}
           </Link>
 
-          <span className="w-full text-sm text-gray-400">
+          <span className="w-full text-sm text-gray-500">
             <Link className="flex" href={`/post/${post.id}`} prefetch={false}>
               {dayjs(post.createdAt).fromNow()}
             </Link>
@@ -118,7 +117,7 @@ export const PostCard = ({ post, user }: PostCardProps) => {
         </div>
         <p className="mt-2">{post.content}</p>
 
-        <div className="mt-6 flex items-center gap-3 text-gray-400">
+        <div className="mt-6 flex items-center gap-3 text-gray-500">
           <button className="inline-flex gap-1">
             <Heart
               onClick={handleLike}
