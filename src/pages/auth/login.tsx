@@ -1,8 +1,6 @@
 import type { GetServerSideProps } from "next";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { Github } from "lucide-react";
 
 const LoginPage = () => {
