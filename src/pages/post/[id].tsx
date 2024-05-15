@@ -5,7 +5,6 @@ import { api } from "@/utils/api";
 import type { GetServerSideProps } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
-import { generateSSG } from "@/server/helpers/generateSSGtrpc";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import EditPost from "@/components/feature/EditPost";
@@ -81,12 +80,8 @@ export default function PostPage({ id }: { id: string }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
-  const ssg = generateSSG(session);
-
   const id = context.params?.id;
   if (typeof id !== "string") throw new Error("no username");
-
-  await ssg.post.getOnePost.prefetch({ postId: id });
 
   if (!session) {
     return {
@@ -98,6 +93,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: { session, trpcState: ssg.dehydrate(), id },
+    props: { session, id },
   };
 };
