@@ -103,38 +103,48 @@ export const PostCard = ({ post, user }: PostCardProps) => {
           </Link>
 
           <span className="w-full text-sm text-gray-500">
-            <Link className="flex" href={`/post/${post.id}`} prefetch={false}>
-              {dayjs(post.createdAt).fromNow()}
-            </Link>
+            {/* <Link className="flex" href={`/post/${post.id}`} prefetch={false}> */}
+            {dayjs(post.createdAt).fromNow()}
+            {/* </Link> */}
           </span>
           {isPostByCurrentUser && (
-            <span className="absolute right-0">
+            <span
+              onClick={(e) => e.preventDefault()}
+              className="absolute right-0"
+            >
               <PostSettingsMenu postId={post.id}>
                 <MoreHorizontal />
               </PostSettingsMenu>
             </span>
           )}
         </div>
-        <p className="mt-2">{post.content}</p>
+        <Link href={`/post/${post.id}`} prefetch={false}>
+          <p className="mt-2">{post.content}</p>
+        </Link>
 
-        <div className="mt-6 flex items-center gap-3 text-gray-500">
-          <button className="inline-flex gap-1">
-            <Heart
-              onClick={handleLike}
-              className={`w-5 ${
-                likedByCurrentUser ? "fill-red-500 text-red-500" : ""
-              }`}
-            />{" "}
-            <span>{likes}</span>
-          </button>
-          <button className="inline-flex gap-1">
-            <Save
-              onClick={handleSave}
-              className={`w-5 ${savedByCurrentUser ? "text-accent" : ""}`}
-            />{" "}
-            <span>{saves}</span>
-          </button>
-        </div>
+        <Link href={`/post/${post.id}`} prefetch={false}>
+          <div
+            onClick={(e) => e.preventDefault()}
+            className="mt-6 flex w-max items-center gap-3 text-gray-500"
+          >
+            <button className="inline-flex gap-1">
+              <Heart
+                onClick={handleLike}
+                className={`w-5 ${
+                  likedByCurrentUser ? "fill-red-500 text-red-500" : ""
+                }`}
+              />{" "}
+              <span>{likes}</span>
+            </button>
+            <button className="inline-flex gap-1">
+              <Save
+                onClick={handleSave}
+                className={`w-5 ${savedByCurrentUser ? "text-accent" : ""}`}
+              />{" "}
+              <span>{saves}</span>
+            </button>
+          </div>
+        </Link>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ type PostInput = {
 };
 
 const AddPost = () => {
-  const queryctx = api.useContext();
+  const queryctx = api.useUtils();
   const { register, handleSubmit, reset, setFocus } = useForm<PostInput>();
   const { mutate, isLoading: isPosting } = api.post.createPost.useMutation({
     onSuccess: () => {
@@ -33,7 +33,7 @@ const AddPost = () => {
         onClick={() => setFocus("post")}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(submitPost)}
-        className="mx-auto flex max-w-[36rem] flex-col rounded-lg border-2 border-gray-100 bg-gray-50 p-5"
+        className="mx-auto flex max-w-[36rem] flex-col rounded-lg border-2 border-gray-100 bg-gray-50 p-[1rem]"
       >
         <div>
           <textarea
@@ -46,7 +46,7 @@ const AddPost = () => {
         </div>
         <button
           type="submit"
-          className="self-end rounded-full bg-accent py-2 px-6 font-medium text-white"
+          className="self-end rounded-full bg-accent px-6 py-[.3rem] text-sm font-normal text-white"
           disabled={isPosting}
         >
           {isPosting ? <LoadingSpinner width={24} height={24} /> : "Post"}
