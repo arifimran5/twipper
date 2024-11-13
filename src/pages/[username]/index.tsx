@@ -63,7 +63,7 @@ const UsernamePage = ({ username }: { username: string }) => {
                   showLikedPostList ? "border-b-2 border-accent" : ""
                 }`}
               >
-                Likes
+                Liked
               </button>
               <button
                 onClick={() => setPostListFilter("saved")}
@@ -120,7 +120,7 @@ const Profile = ({ username }: { username: string }) => {
   const websiteArr = user.website?.split("//");
 
   return (
-    <section className="mt-8 rounded-2xl bg-primary_dark p-5">
+    <section className="mt-8 rounded-2xl bg-gradient-to-t from-primary_dark via-slate-900 to-slate-800 p-5">
       <div className="w-max rounded-full bg-accent p-[2px]">
         <Image
           width={100}
@@ -139,7 +139,7 @@ const Profile = ({ username }: { username: string }) => {
         <h2 className="font-medium text-gray-400">@{user.username}</h2>
         {user.website ? (
           <a href={user.website}>
-            <span className="text-gray-400">
+            <span className="text-blue-400 underline underline-offset-1">
               {!websiteArr && user.website}
               {websiteArr && websiteArr[1]}
             </span>

@@ -30,7 +30,7 @@ const Header = () => {
     <>
       <header
         className={cn(
-          "navbar sticky top-2 mt-4 flex items-center justify-between rounded-full bg-primary_dark px-8 py-4 text-white transition-opacity duration-150 ease-out",
+          "navbar sticky top-2 z-[9999] mt-4 flex items-center justify-between rounded-full bg-gradient-to-t from-primary_dark via-slate-900 to-slate-800 px-8 py-4 text-white transition-opacity duration-150 ease-out",
           isAtTop ? "" : "bg-primary_dark/80 backdrop-blur-sm"
         )}
       >

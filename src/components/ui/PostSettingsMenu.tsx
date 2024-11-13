@@ -56,7 +56,7 @@ const PostSettingsMenu = ({ children, postId }: PostSettingsMenuProps) => {
               </button>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className=" flex select-none items-center rounded-[3px] px-1 py-1 pl-3 font-medium text-red-400 outline-none data-[disabled]:pointer-events-none data-[disabled]:text-gray-500 data-[highlighted]:text-accent">
+          <DropdownMenuItem className="flex select-none items-center rounded-[3px] px-1 py-1 pl-3 font-medium text-red-400 outline-none data-[disabled]:pointer-events-none data-[disabled]:text-gray-500 data-[highlighted]:text-accent">
             <button
               onClick={() => deletePost({ postId, userId: session.user.id })}
               className="inline-flex items-center gap-2 text-sm"

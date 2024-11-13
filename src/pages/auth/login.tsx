@@ -44,18 +44,25 @@ const LoginPage = () => {
         />
       </Head>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 min-h-screen bg-slate-900">
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-accent to-black/40">
+      <section className="grid min-h-screen grid-cols-1 bg-slate-900 md:grid-cols-2">
+        <div className="flex min-h-[50%] items-center justify-center bg-gradient-to-r from-slate-700 to-black/40 md:min-h-screen">
           <div>
-            <Image src="/login-main-pc.png" alt="Main screen image of twipper profile" width={614} height={605} />
+            <Image
+              src="/login-main-pc.png"
+              alt="Main screen image of twipper profile"
+              className="w-[400px] md:w-[500px]"
+              width={500}
+              height={605}
+            />
           </div>
         </div>
-        <section className="flex min-h-screen items-center justify-center">
-          <div className="rounded-md bg-slate-700 text-white p-6 sm:w-[30rem]">
-            <h1 className="text-3xl font-bold">Welcome 🧁</h1>
-            <p>Start your journey of `disney clone of twitter` 👉 Twipper</p>
+        <section className="flex min-h-[50%] items-center justify-center md:min-h-screen">
+          <div className="m-2 flex w-[30rem] flex-col items-center rounded-md p-4 text-center text-white md:p-6">
+            <p className="border-b-2 border-gray-600 text-lg font-semibold text-gray-400">
+              Start your Twipper journey 🚀
+            </p>
             <button
-              className="mt-4 flex items-center gap-2 rounded-full border-2 border-slate-500 bg-gradient-to-br from-slate-700 to-slate-800 px-6 py-3 font-medium text-white no-underline"
+              className="mt-4 flex w-max items-center gap-2 rounded-full border-2 border-slate-500 bg-gradient-to-br from-slate-700 to-slate-800 px-6 py-3 font-medium text-white no-underline transition-all duration-150 hover:bg-gradient-to-bl hover:from-slate-800 hover:to-slate-700"
               onClick={
                 sessionData ? () => void signOut() : () => void signIn("github")
               }
